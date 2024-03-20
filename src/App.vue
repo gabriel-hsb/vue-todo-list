@@ -5,41 +5,61 @@ const state = reactive({
   tarefas: [
     {
       nome: "Ir para academia",
-      finalizada: TextTrackCueList
+      finalizada: true,
     },
     {
       nome: "Estudar VUE JS",
-      finalizada: true
+      finalizada: true,
     },
     {
       nome: "Estudar React JS",
-      finalizada: false
+      finalizada: false,
     },
-  ]
-})
+  ],
+});
 
-const statusTarefa = () => {
-  if (state.tarefa.finalizada) {
-    return
-  }
+const tarefasFinalizadas = () => {
+  return state.tarefas.filter(tarefa => tarefa.finalizada)
 }
+
+const tarefasNaoFinalizadas = () => {
+  return state.tarefas.filter(tarefa => !tarefa.finalizada)
+}
+
+const finalizaTarefa = (tarefa) => {
+  tarefa.finalizada = !tarefa.finalizada;
+};
 
 </script>
 
+<!-- não está atualizando o estado de 'finalizada' da tarefa ao clicar no checked! -->
 <template>
   <div class="container">
+    <header>
+      <h1 class="my-5 text-center">To-do List</h1>
+      <p v-if="tarefasNaoFinalizadas().length >= 1">Você possui <strong>{{ tarefasNaoFinalizadas().length }}</strong>
+        tarefas pendentes</p>
+      <p v-else><strong>Você finalizou todas as tarefas! 🥳</strong></p>
+    </header>
+    <form class="d-flex justify-content-between">
+      <div class="input-group mb-3">
+        <input type="text" id="novaTarefa" class="form-control">
+        <button @click.prevent="insereNovaTarefa" type="submit" class="btn btn-outline-secondary">Adicionar tarefa
+          +</button>
+      </div>
+    </form>
     <ul class="list-group list-group-flush">
       <li v-for="tarefa in state.tarefas" class="list-group-item">
-        <!-- vai aplicar a classe 'finalizada' quando tarefa.finalizada for true -->
-        <input type="checkbox" :name="tarefa.nome" :id="tarefa.nome" :checked="tarefa.finalizada">
-        <label :for="tarefa.nome" class="ms-1"> {{ tarefa.nome }}</label>
+        <input @change="finalizaTarefa(tarefa)" :name="tarefa.nome" :id="tarefa.nome"
+          :checked="tarefa.finalizada === true" type="checkbox" />
+        <label :for="tarefa.nome" :class="{ feita: tarefa.finalizada }" class="ms-1"> {{ tarefa.nome }}</label>
       </li>
     </ul>
   </div>
 </template>
 
 <style scoped>
-.finalizada {
+.feita {
   text-decoration: line-through;
 }
 </style>
