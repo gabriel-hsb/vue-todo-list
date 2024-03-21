@@ -45,8 +45,12 @@ const insereNovaTarefa = () => {
     nome: state.tarefaTemplate,
     finalizada: false,
   }
-  state.tarefas.push(novaTarefa);
-  state.tarefaTemplate = '';
+  if (state.tarefas.some(tarefa => tarefa.nome === novaTarefa.nome)) {
+    window.alert(`A tarefa ${novaTarefa.nome} já foi inserida`)
+  } else {
+    state.tarefas.push(novaTarefa);
+    state.tarefaTemplate = '';
+  }
 }
 
 const tarefasFiltradas = () => {
@@ -59,34 +63,36 @@ const tarefasFiltradas = () => {
       return state.tarefas;
   }
 }
-
-// precisa verificar se tarefa já foi incluída (includes)
 </script>
 
 <template>
   <div class="container">
-    <header>
-      <h1 class="my-5 text-center d-flex justify-content-center align-items-center">
+    <header class="text-center my-5">
+      <h1 class="mb-4 d-flex justify-content-center align-items-center">
         <ion-icon name="checkmark-circle-outline"></ion-icon>
         To-do List
       </h1>
-      <p v-if="tarefasNaoFinalizadas().length >= 1">Você possui <strong>{{ tarefasNaoFinalizadas().length }}</strong>
+      <p v-if="tarefasNaoFinalizadas().length > 1">Você possui <strong>{{ tarefasNaoFinalizadas().length }}</strong>
         tarefas pendentes</p>
+      <p v-else-if="tarefasNaoFinalizadas().length == 1">Você possui apenas <strong>{{ tarefasNaoFinalizadas().length
+          }}</strong>
+        tarefa pendente</p>
       <p v-else><strong>Você finalizou todas as tarefas! 🥳</strong></p>
     </header>
-    <form @submit.prevent="insereNovaTarefa">
-      <div class="input-group mb-3">
-        <input :value="state.tarefaTemplate" @change="atualizaNovaTarefa" type="text" class="form-control" required>
+    <form @submit.prevent="insereNovaTarefa" class="d-flex flex-sm-row flex-column">
+      <div class="input-group mb-1">
+        <input :value="state.tarefaTemplate" @change="atualizaNovaTarefa" type="text" class="form-control w-auto"
+          required>
         <button @click. type="submit" class="btn btn-outline-success">Adicionar tarefa
           +</button>
-        <div class="form-floating">
-          <select id="floatingSelect" class="form-select" @change="atualizaFiltro">
-            <option selected value="filtroTodas">Todas tarefas</option>
-            <option value="filtroNaoFinalizadas">Tarefas não finalizadas</option>
-            <option value="filtroFinalizadas">Tarefas finalizadas</option>
-          </select>
-          <label for="floatingSelect">Filtros</label>
-        </div>
+      </div>
+      <div class="form-floating d-flex w-auto mb-3">
+        <select id="floatingSelect" class="form-select flex-grow-1" @change="atualizaFiltro">
+          <option selected value="filtroTodas">Todas tarefas</option>
+          <option value="filtroNaoFinalizadas">Tarefas não finalizadas</option>
+          <option value="filtroFinalizadas">Tarefas finalizadas</option>
+        </select>
+        <label for="floatingSelect">Filtros</label>
       </div>
     </form>
     <ul class="list-group list-group-flush">
@@ -100,12 +106,6 @@ const tarefasFiltradas = () => {
 </template>
 
 <style scoped>
-.d-flex {
-  gap: .9rem;
-}
-
-
-
 .feita {
   text-decoration: line-through;
 }
