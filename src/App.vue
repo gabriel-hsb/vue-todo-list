@@ -85,9 +85,9 @@ const tarefasFiltradas = () => {
     </header>
     <form @submit.prevent="insereNovaTarefa" class="d-flex flex-row flex-wrap gap-3 align-items-center ">
       <div class="input-group mb-1 w-75 flex-grow-1">
-        <input :value="state.tarefaTemplate" @change="atualizaNovaTarefa" type="text" class="form-control" required>
-        <button type="submit" class="btn btn-outline-success">Adicionar tarefa
-          +</button>
+        <input :value="state.tarefaTemplate" @change="atualizaNovaTarefa" type="text" class="form-control" required
+          placeholder="Digite o nome da nova tarefa">
+        <button type="submit" class="btn btn-outline-success">Adicionar +</button>
         <button @click="reloadPage" id="btn-restart"
           class="btn btn-outline-danger d-flex align-items-center gap-1">Reiniciar
           <svg id="restart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
